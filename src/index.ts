@@ -216,3 +216,6 @@ const app = new Elysia()
   .listen(3000);
 
 console.log(`🚀 Solvia Nova Portfolio is running at http://${app.server?.hostname}:${app.server?.port}`);
+
+// Export for Vercel
+export default app;

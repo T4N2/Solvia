@@ -2,7 +2,9 @@
   "name": "solvia-nova-portfolio",
   "version": "1.0.0",
   "description": "Modern futuristic portfolio website for Solvia Nova software house",
-  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "bun run src/index.ts",
     "start": "bun run src/index.ts",
