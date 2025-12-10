@@ -10,3 +10,7 @@ force-*.js
 *.test.ts
 bun.lockb
 bun.lock
+!api/
+!public/
+!data/
+!index.js
