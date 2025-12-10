@@ -1,0 +1,11 @@
+node_modules
+.git
+.kiro
+src
+scripts
+*.md
+test-*.html
+debug-*.html
+force-*.js
+*.test.ts
+bun.lockb
