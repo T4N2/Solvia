@@ -90,7 +90,9 @@ function getServiceIcon(iconType) {
  */
 async function loadServicePackages() {
   try {
-    const response = await fetch('/data/services.json');
+    // Add cache busting parameter to force fresh data
+    const cacheBuster = Date.now();
+    const response = await fetch(`/data/services.json?v=${cacheBuster}`);
     if (!response.ok) {
       throw new Error('Failed to load services');
     }

@@ -1,65 +1,65 @@
 [
   {
     "id": "web-development",
-    "name": "Web Development",
-    "description": "Custom web applications built with modern technologies for optimal performance and user experience",
+    "name": "Pengembangan Website",
+    "description": "Aplikasi web kustom yang dibangun dengan teknologi modern untuk performa optimal dan pengalaman pengguna terbaik",
     "features": [
-      "Responsive design for all devices",
-      "Modern frontend frameworks (React, Next.js)",
-      "RESTful API development",
-      "Database design and optimization",
-      "SEO optimization",
-      "Performance optimization"
+      "Desain responsif untuk semua perangkat",
+      "Framework frontend modern (React, Next.js)",
+      "Pengembangan RESTful API",
+      "Desain dan optimasi database",
+      "Optimasi SEO",
+      "Optimasi performa website"
     ],
-    "price": "Starting from $2,500",
+    "price": "Mulai dari Rp 1.500.000",
     "popular": true,
     "icon": "web"
   },
   {
     "id": "mobile-development",
-    "name": "Mobile Development",
-    "description": "Native and cross-platform mobile applications for iOS and Android with seamless user experience",
+    "name": "Pengembangan Aplikasi Mobile",
+    "description": "Aplikasi mobile native dan cross-platform untuk iOS dan Android dengan pengalaman pengguna yang seamless",
     "features": [
-      "iOS and Android development",
-      "Cross-platform solutions (React Native)",
-      "Native performance optimization",
-      "Push notifications integration",
-      "Offline functionality",
-      "App Store deployment"
+      "Pengembangan iOS dan Android",
+      "Solusi cross-platform (React Native / Flutter)",
+      "Optimasi performa native",
+      "Integrasi push notifications",
+      "Fungsionalitas offline",
+      "Deployment ke App Store & Play Store"
     ],
-    "price": "Starting from $3,500",
+    "price": "Mulai dari Rp 3.000.000",
     "popular": false,
     "icon": "mobile"
   },
   {
     "id": "full-stack-solution",
-    "name": "Full Stack Solution",
-    "description": "Complete end-to-end solution including frontend, backend, database, and deployment infrastructure",
+    "name": "Solusi Full Stack",
+    "description": "Solusi end-to-end lengkap meliputi frontend, backend, database, dan infrastruktur deployment",
     "features": [
-      "Full application architecture",
-      "Frontend and backend development",
-      "Cloud infrastructure setup (AWS, GCP)",
-      "CI/CD pipeline configuration",
-      "Security implementation",
-      "Ongoing maintenance and support"
+      "Arsitektur aplikasi lengkap",
+      "Pengembangan frontend dan backend",
+      "Setup infrastruktur cloud (AWS, GCP)",
+      "Konfigurasi CI/CD pipeline",
+      "Implementasi keamanan",
+      "Maintenance dan support berkelanjutan"
     ],
-    "price": "Custom pricing",
+    "price": "Harga disesuaikan kebutuhan",
     "popular": true,
     "icon": "fullstack"
   },
   {
     "id": "ui-ux-design",
-    "name": "UI/UX Design",
-    "description": "Beautiful and intuitive user interfaces designed with user-centered approach and modern design principles",
+    "name": "Desain UI/UX",
+    "description": "Antarmuka pengguna yang indah dan intuitif dirancang dengan pendekatan user-centered dan prinsip desain modern",
     "features": [
-      "User research and personas",
-      "Wireframing and prototyping",
-      "High-fidelity mockups",
-      "Design system creation",
+      "Riset pengguna dan personas",
+      "Wireframing dan prototyping",
+      "Mockup high-fidelity",
+      "Pembuatan design system",
       "Usability testing",
-      "Responsive design guidelines"
+      "Panduan desain responsif"
     ],
-    "price": "Starting from $1,500",
+    "price": "Mulai dari Rp 500.000",
     "popular": false,
     "icon": "design"
   }

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Testimonial Cache - Solvia Nova</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .fix-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .step {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .button.success {
+            background: #28a745;
+        }
+        .button.danger {
+            background: #dc3545;
+        }
+        .code {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            border: 1px solid #dee2e6;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ffeaa7;
+            margin: 15px 0;
+        }
+        .success-msg {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #c3e6cb;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="fix-container">
+        <h1>🔧 Fix Testimonial Cache Issue</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Masalah:</strong> Data testimonials sudah terupdate di server, tapi browser masih menampilkan foto lama karena cache.
+        </div>
+
+        <div class="step">
+            <h3>🚀 Solusi Cepat (Pilih salah satu):</h3>
+            
+            <h4>Opsi 1: Hard Refresh (Paling Mudah)</h4>
+            <p>Tekan kombinasi tombol ini di browser:</p>
+            <div class="code">
+                <strong>Windows:</strong> Ctrl + F5<br>
+                <strong>Mac:</strong> Cmd + Shift + R<br>
+                <strong>Linux:</strong> Ctrl + Shift + R
+            </div>
+            
+            <h4>Opsi 2: Clear Browser Cache</h4>
+            <p>1. Tekan <code>Ctrl + Shift + Delete</code> (Windows) atau <code>Cmd + Shift + Delete</code> (Mac)</p>
+            <p>2. Pilih "Cached images and files"</p>
+            <p>3. Klik "Clear data"</p>
+            <p>4. Refresh halaman</p>
+            
+            <h4>Opsi 3: Disable Cache (Developer)</h4>
+            <p>1. Buka Developer Tools (F12)</p>
+            <p>2. Pergi ke tab "Network"</p>
+            <p>3. Centang "Disable cache"</p>
+            <p>4. Refresh halaman</p>
+        </div>
+
+        <div class="step">
+            <h3>🔍 Test & Verify</h3>
+            <p>Setelah clear cache, test apakah foto testimonial sudah terupdate:</p>
+            
+            <a href="http://localhost:3000" class="button" target="_blank">
+                🌐 Buka Website Utama
+            </a>
+            
+            <a href="debug-testimonials.html" class="button" target="_blank">
+                🔧 Debug Tools
+            </a>
+            
+            <button class="button success" onclick="testTestimonials()">
+                ✅ Test Testimonials API
+            </button>
+        </div>
+
+        <div class="step">
+            <h3>📸 Foto Testimonial yang Benar</h3>
+            <p>Setelah cache clear, Anda harus melihat foto-foto ini:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+                <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=80&h=80&fit=crop&crop=face" 
+                         style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    <p><strong>Budi Santoso</strong><br><small>Kementerian Pendidikan</small></p>
+                </div>
+                
+                <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=face" 
+                         style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    <p><strong>Sarah Wijaya</strong><br><small>Bank Digital Indonesia</small></p>
+                </div>
+                
+                <div style="text-align: center; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=80&h=80&fit=crop&crop=face" 
+                         style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    <p><strong>Dr. Ahmad Hidayat</strong><br><small>PT Industri Smart</small></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="test-result"></div>
+
+        <div class="step">
+            <h3>🆘 Jika Masih Bermasalah</h3>
+            <p>Jika setelah clear cache masih menampilkan foto lama:</p>
+            
+            <ol>
+                <li><strong>Restart Browser:</strong> Tutup browser sepenuhnya, lalu buka lagi</li>
+                <li><strong>Incognito Mode:</strong> Buka website di mode incognito/private</li>
+                <li><strong>Different Browser:</strong> Coba browser lain (Chrome, Firefox, Edge)</li>
+                <li><strong>Restart Server:</strong> Stop server (Ctrl+C) lalu jalankan <code>bun run dev</code> lagi</li>
+            </ol>
+            
+            <button class="button danger" onclick="emergencyFix()">
+                🚨 Emergency Fix
+            </button>
+        </div>
+    </div>
+
+    <script>
+        async function testTestimonials() {
+            const resultDiv = document.getElementById('test-result');
+            resultDiv.innerHTML = '<div style="background: #d1ecf1; padding: 15px; border-radius: 5px;">🔄 Testing testimonials API...</div>';
+            
+            try {
+                const cacheBuster = Date.now();
+                const response = await fetch(`http://localhost:3000/data/testimonials.json?v=${cacheBuster}`, {
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Check if photos are updated
+                const newPhotos = [
+                    'photo-1560250097-0b93528c311a',
+                    'photo-1573496359142-b8d87734a5a2',
+                    'photo-1612349317150-e413f6a5b16d',
+                    'photo-1580489944761-15a19d654956',
+                    'photo-1507591064344-4c6ce005b128',
+                    'photo-1551836022-deb4988cc6c0'
+                ];
+                
+                const updatedCount = data.filter(t => 
+                    newPhotos.some(photoId => t.photo && t.photo.includes(photoId))
+                ).length;
+                
+                if (updatedCount === data.length) {
+                    resultDiv.innerHTML = `
+                        <div class="success-msg">
+                            <strong>✅ SUCCESS!</strong> Semua ${data.length} foto testimonial sudah terupdate!<br>
+                            Sekarang buka <a href="http://localhost:3000" target="_blank">website utama</a> dan scroll ke bagian testimonials.
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 5px;">
+                            <strong>⚠️ PARTIAL UPDATE:</strong> ${updatedCount}/${data.length} foto sudah terupdate.<br>
+                            Coba clear browser cache dan test lagi.
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div style="background: #f8d7da; padding: 15px; border-radius: 5px;">
+                        <strong>❌ ERROR:</strong> ${error.message}<br>
+                        Pastikan server berjalan di localhost:3000
+                    </div>
+                `;
+            }
+        }
+        
+        function emergencyFix() {
+            if (confirm('Emergency fix akan membuka beberapa tab untuk clear cache. Lanjutkan?')) {
+                // Clear all possible caches
+                if ('caches' in window) {
+                    caches.keys().then(names => {
+                        names.forEach(name => caches.delete(name));
+                    });
+                }
+                
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Force reload with cache busting
+                const newUrl = `${window.location.origin}${window.location.pathname}?emergency=${Date.now()}`;
+                window.location.href = newUrl;
+            }
+        }
+        
+        // Auto-test on page load
+        setTimeout(testTestimonials, 1000);
+    </script>
+</body>
+</html>

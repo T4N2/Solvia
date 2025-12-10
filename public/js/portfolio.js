@@ -137,7 +137,9 @@ let currentFilter = 'all';
  */
 async function loadPortfolioItems() {
   try {
-    const response = await fetch('/data/portfolio.json');
+    // Add cache busting parameter to force fresh data
+    const cacheBuster = Date.now();
+    const response = await fetch(`/data/portfolio.json?v=${cacheBuster}`);
     if (!response.ok) {
       throw new Error('Failed to load portfolio');
     }

@@ -65,7 +65,9 @@ const AUTO_PLAY_DELAY = 5000; // 5 seconds
  */
 async function loadTestimonials() {
   try {
-    const response = await fetch('/data/testimonials.json');
+    // Add cache busting parameter to force fresh data
+    const cacheBuster = Date.now();
+    const response = await fetch(`/data/testimonials.json?v=${cacheBuster}`);
     if (!response.ok) {
       throw new Error('Failed to load testimonials');
     }

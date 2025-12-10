@@ -2666,6 +2666,24 @@ section {
   box-shadow: 0 8px 20px rgba(29, 161, 242, 0.4);
 }
 
+/* Instagram specific styling */
+.social-links a[href*="instagram"]:hover {
+  background: linear-gradient(135deg, #E4405F, #C13584, #833AB4);
+  box-shadow: 0 8px 20px rgba(228, 64, 95, 0.4);
+}
+
+/* TikTok specific styling */
+.social-links a[href*="tiktok"]:hover {
+  background: linear-gradient(135deg, #000000, #FF0050);
+  box-shadow: 0 8px 20px rgba(255, 0, 80, 0.4);
+}
+
+/* WhatsApp specific styling */
+.social-links a[href*="wa.me"]:hover {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+}
+
 /* Responsive Contact Section */
 @media (max-width: 1024px) {
   .contact-wrapper {

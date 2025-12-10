@@ -2,53 +2,54 @@
   {
     "id": "testimonial-1",
     "clientName": "Budi Santoso",
-    "company": "RetailCo",
-    "text": "Solvia Nova mengubah visi e-commerce kami menjadi kenyataan. Platform yang mereka bangun sangat robust, user-friendly, dan mampu menangani ribuan transaksi setiap hari. Tim mereka sangat profesional dan responsif terhadap kebutuhan kami.",
-    "photo": "/images/testimonials/budi.jpg",
+    "company": "Kementerian Pendidikan Indonesia",
+    "text": "Portal Magang Indonesia yang dikembangkan Solvia Nova telah membantu ribuan mahasiswa menemukan program magang yang tepat. Platform yang robust, user-friendly, dan mampu menangani traffic tinggi. Tim mereka sangat profesional dan responsif terhadap kebutuhan kami.",
+    "photo": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
     "rating": 5,
-    "position": "CEO"
+    "position": "Direktur Program Magang"
   },
   {
     "id": "testimonial-2",
     "clientName": "Sarah Wijaya",
-    "company": "FinanceBank",
-    "text": "Aplikasi mobile banking yang dikembangkan oleh Solvia Nova melampaui ekspektasi kami. Keamanan yang ketat, UI yang intuitif, dan performa yang cepat membuat nasabah kami sangat puas. Highly recommended!",
-    "photo": "/images/testimonials/sarah.jpg",
+    "company": "Bank Digital Indonesia",
+    "text": "Aplikasi mobile banking yang dikembangkan oleh Solvia Nova melampaui ekspektasi kami. Keamanan yang ketat, UI yang intuitif, dan performa yang cepat membuat nasabah kami sangat puas. Tingkat adopsi mencapai 95% dalam 3 bulan pertama!",
+    "photo": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
     "rating": 5,
     "position": "Head of Digital Banking"
   },
   {
     "id": "testimonial-3",
     "clientName": "Dr. Ahmad Hidayat",
-    "company": "MediCare Hospital",
-    "text": "Healthcare management system dari Solvia Nova telah meningkatkan efisiensi operasional rumah sakit kami secara signifikan. Sistem yang terintegrasi dengan baik dan mudah digunakan oleh seluruh staff medis.",
-    "photo": "/images/testimonials/ahmad.jpg",
+    "company": "PT Industri Smart Indonesia",
+    "text": "Sistem IoT monitoring dari Solvia Nova telah meningkatkan efisiensi operasional pabrik kami secara signifikan. Sistem yang terintegrasi dengan baik, real-time monitoring, dan predictive maintenance yang akurat. ROI tercapai dalam 6 bulan.",
+    "photo": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face",
     "rating": 5,
-    "position": "Medical Director"
+    "position": "Chief Technology Officer"
   },
   {
     "id": "testimonial-4",
     "clientName": "Linda Kusuma",
-    "company": "LogiTrans",
-    "text": "Platform tracking logistics yang mereka kembangkan sangat membantu kami dalam mengelola armada dan optimasi rute. Real-time tracking dan analytics dashboard memberikan insights yang sangat valuable untuk bisnis kami.",
-    "rating": 4,
+    "company": "LogiTrans Indonesia",
+    "text": "Platform tracking logistics yang mereka kembangkan sangat membantu kami dalam mengelola armada dan optimasi rute. Real-time tracking dan analytics dashboard memberikan insights yang sangat valuable. Efisiensi pengiriman meningkat 40%.",
+    "photo": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face",
+    "rating": 5,
     "position": "Operations Manager"
   },
   {
     "id": "testimonial-5",
     "clientName": "Rudi Hartono",
-    "company": "SocialConnect",
-    "text": "Solvia Nova berhasil membangun social media app yang scalable dan feature-rich. Mereka memahami kebutuhan kami dan memberikan solusi teknis yang tepat. Komunikasi selama project berjalan sangat baik.",
-    "photo": "/images/testimonials/rudi.jpg",
+    "company": "SocialConnect Indonesia",
+    "text": "Solvia Nova berhasil membangun social media app yang scalable dan feature-rich. Mereka memahami kebutuhan kami dan memberikan solusi teknis yang tepat. Komunikasi selama project berjalan sangat baik, timeline selalu tepat waktu.",
+    "photo": "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=150&h=150&fit=crop&crop=face",
     "rating": 5,
     "position": "Founder & CTO"
   },
   {
     "id": "testimonial-6",
     "clientName": "Maya Putri",
-    "company": "EduLearn",
-    "text": "Platform pembelajaran online yang dikembangkan sangat membantu kami dalam menyediakan pendidikan berkualitas secara digital. Fitur-fitur seperti video streaming, quiz interaktif, dan progress tracking bekerja dengan sempurna.",
-    "photo": "/images/testimonials/maya.jpg",
+    "company": "EduLearn Indonesia",
+    "text": "Platform pembelajaran online yang dikembangkan sangat membantu kami dalam menyediakan pendidikan berkualitas secara digital. Fitur-fitur seperti video streaming, quiz interaktif, dan progress tracking bekerja dengan sempurna. Student engagement meningkat 60%.",
+    "photo": "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=150&h=150&fit=crop&crop=face",
     "rating": 5,
     "position": "Education Director"
   }

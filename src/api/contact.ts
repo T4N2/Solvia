@@ -118,7 +118,7 @@ export async function sendContactEmail(data: ContactFormData): Promise<void> {
 
   const mailOptions = {
     from: process.env.SMTP_FROM || 'noreply@solvianove.com',
-    to: process.env.CONTACT_EMAIL || 'contact@solvianove.com',
+    to: process.env.CONTACT_EMAIL || '210102001@mhs.udb.ac.id',
     subject: `New Contact Form Submission from ${data.name}`,
     text: `
 Name: ${data.name}
