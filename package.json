@@ -8,10 +8,7 @@
   "scripts": {
     "dev": "bun run src/index.ts",
     "start": "bun run src/index.ts",
-    "test": "bun test",
-    "build": "bun run scripts/minify.js",
-    "optimize:images": "bun run scripts/optimize-images.js",
-    "build:prod": "bun run scripts/minify.js && bun run scripts/optimize-images.js && bun run src/index.ts"
+    "test": "bun test"
   },
   "dependencies": {
     "@elysiajs/static": "^1.0.0",

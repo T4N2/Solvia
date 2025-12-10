@@ -9,3 +9,4 @@ debug-*.html
 force-*.js
 *.test.ts
 bun.lockb
+bun.lock
