@@ -1,0 +1,98 @@
+[
+  {
+    "id": "ecommerce-platform",
+    "title": "E-Commerce Platform",
+    "description": "Modern e-commerce platform with real-time inventory management and payment integration",
+    "thumbnail": "/images/portfolio/ecommerce-thumb.jpg",
+    "technologies": ["React", "Node.js", "PostgreSQL", "Stripe"],
+    "category": "web",
+    "detailedDescription": "A comprehensive e-commerce solution featuring real-time inventory tracking, secure payment processing, order management, and customer analytics dashboard. Built with scalability in mind to handle thousands of concurrent users.",
+    "images": [
+      "/images/portfolio/ecommerce-1.jpg",
+      "/images/portfolio/ecommerce-2.jpg",
+      "/images/portfolio/ecommerce-3.jpg"
+    ],
+    "clientName": "RetailCo",
+    "projectUrl": "https://example.com",
+    "completedDate": "2024-03"
+  },
+  {
+    "id": "mobile-banking-app",
+    "title": "Mobile Banking App",
+    "description": "Secure mobile banking application with biometric authentication and instant transfers",
+    "thumbnail": "/images/portfolio/banking-thumb.jpg",
+    "technologies": ["React Native", "Node.js", "MongoDB", "AWS"],
+    "category": "mobile",
+    "detailedDescription": "A feature-rich mobile banking application offering secure transactions, biometric authentication, real-time notifications, bill payments, and comprehensive account management. Deployed on both iOS and Android platforms.",
+    "images": [
+      "/images/portfolio/banking-1.jpg",
+      "/images/portfolio/banking-2.jpg"
+    ],
+    "clientName": "FinanceBank",
+    "completedDate": "2024-01"
+  },
+  {
+    "id": "healthcare-management",
+    "title": "Healthcare Management System",
+    "description": "Comprehensive healthcare management system for hospitals and clinics",
+    "thumbnail": "/images/portfolio/healthcare-thumb.jpg",
+    "technologies": ["Next.js", "TypeScript", "PostgreSQL", "Docker"],
+    "category": "web",
+    "detailedDescription": "An integrated healthcare management system featuring patient records, appointment scheduling, prescription management, billing, and reporting. Compliant with healthcare data protection regulations.",
+    "images": [
+      "/images/portfolio/healthcare-1.jpg",
+      "/images/portfolio/healthcare-2.jpg",
+      "/images/portfolio/healthcare-3.jpg"
+    ],
+    "clientName": "MediCare Hospital",
+    "projectUrl": "https://example.com/healthcare",
+    "completedDate": "2023-11"
+  },
+  {
+    "id": "logistics-tracking",
+    "title": "Logistics Tracking Platform",
+    "description": "Real-time logistics and fleet management platform with GPS tracking",
+    "thumbnail": "/images/portfolio/logistics-thumb.jpg",
+    "technologies": ["React", "Python", "MongoDB", "Google Maps API"],
+    "category": "web",
+    "detailedDescription": "A sophisticated logistics platform providing real-time GPS tracking, route optimization, delivery scheduling, and comprehensive analytics for fleet management. Integrates with multiple third-party services.",
+    "images": [
+      "/images/portfolio/logistics-1.jpg"
+    ],
+    "clientName": "LogiTrans",
+    "completedDate": "2023-09"
+  },
+  {
+    "id": "social-media-app",
+    "title": "Social Media Application",
+    "description": "Feature-rich social networking app with real-time messaging and content sharing",
+    "thumbnail": "/images/portfolio/social-thumb.jpg",
+    "technologies": ["React Native", "Node.js", "Redis", "WebSocket"],
+    "category": "mobile",
+    "detailedDescription": "A modern social media application featuring real-time messaging, photo and video sharing, stories, live streaming, and advanced privacy controls. Built for high performance and scalability.",
+    "images": [
+      "/images/portfolio/social-1.jpg",
+      "/images/portfolio/social-2.jpg"
+    ],
+    "clientName": "SocialConnect",
+    "projectUrl": "https://example.com/social",
+    "completedDate": "2024-02"
+  },
+  {
+    "id": "education-platform",
+    "title": "Online Education Platform",
+    "description": "Interactive learning platform with video courses and progress tracking",
+    "thumbnail": "/images/portfolio/education-thumb.jpg",
+    "technologies": ["Next.js", "Node.js", "PostgreSQL", "AWS S3"],
+    "category": "web",
+    "detailedDescription": "A comprehensive online learning platform featuring video courses, interactive quizzes, progress tracking, certificates, and instructor dashboards. Supports multiple payment methods and subscription models.",
+    "images": [
+      "/images/portfolio/education-1.jpg",
+      "/images/portfolio/education-2.jpg",
+      "/images/portfolio/education-3.jpg"
+    ],
+    "clientName": "EduLearn",
+    "projectUrl": "https://example.com/edulearn",
+    "completedDate": "2023-12"
+  }
+]

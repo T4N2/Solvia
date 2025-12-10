@@ -1,0 +1,26 @@
+{
+  "name": "solvia-nova-portfolio",
+  "version": "1.0.0",
+  "description": "Modern futuristic portfolio website for Solvia Nova software house",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run src/index.ts",
+    "start": "bun run src/index.ts",
+    "test": "bun test",
+    "build": "bun run scripts/minify.js",
+    "optimize:images": "bun run scripts/optimize-images.js",
+    "build:prod": "bun run scripts/minify.js && bun run scripts/optimize-images.js && bun run src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/static": "^1.0.0",
+    "elysia": "^1.0.0",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^7.0.11"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.4",
+    "bun-types": "latest",
+    "fast-check": "^4.4.0",
+    "jsdom": "^27.3.0"
+  }
+}

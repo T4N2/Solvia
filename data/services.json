@@ -1,0 +1,66 @@
+[
+  {
+    "id": "web-development",
+    "name": "Web Development",
+    "description": "Custom web applications built with modern technologies for optimal performance and user experience",
+    "features": [
+      "Responsive design for all devices",
+      "Modern frontend frameworks (React, Next.js)",
+      "RESTful API development",
+      "Database design and optimization",
+      "SEO optimization",
+      "Performance optimization"
+    ],
+    "price": "Starting from $2,500",
+    "popular": true,
+    "icon": "web"
+  },
+  {
+    "id": "mobile-development",
+    "name": "Mobile Development",
+    "description": "Native and cross-platform mobile applications for iOS and Android with seamless user experience",
+    "features": [
+      "iOS and Android development",
+      "Cross-platform solutions (React Native)",
+      "Native performance optimization",
+      "Push notifications integration",
+      "Offline functionality",
+      "App Store deployment"
+    ],
+    "price": "Starting from $3,500",
+    "popular": false,
+    "icon": "mobile"
+  },
+  {
+    "id": "full-stack-solution",
+    "name": "Full Stack Solution",
+    "description": "Complete end-to-end solution including frontend, backend, database, and deployment infrastructure",
+    "features": [
+      "Full application architecture",
+      "Frontend and backend development",
+      "Cloud infrastructure setup (AWS, GCP)",
+      "CI/CD pipeline configuration",
+      "Security implementation",
+      "Ongoing maintenance and support"
+    ],
+    "price": "Custom pricing",
+    "popular": true,
+    "icon": "fullstack"
+  },
+  {
+    "id": "ui-ux-design",
+    "name": "UI/UX Design",
+    "description": "Beautiful and intuitive user interfaces designed with user-centered approach and modern design principles",
+    "features": [
+      "User research and personas",
+      "Wireframing and prototyping",
+      "High-fidelity mockups",
+      "Design system creation",
+      "Usability testing",
+      "Responsive design guidelines"
+    ],
+    "price": "Starting from $1,500",
+    "popular": false,
+    "icon": "design"
+  }
+]
