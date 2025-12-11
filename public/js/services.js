@@ -90,14 +90,14 @@ function getServiceIcon(iconType) {
  */
 async function loadServicePackages() {
   try {
-    // Add cache busting parameter to force fresh data
-    const cacheBuster = Date.now();
-    const response = await fetch(`/data/services.json?v=${cacheBuster}`);
+    // Use API endpoint instead of direct file access
+    const response = await fetch('/api/services');
     if (!response.ok) {
       throw new Error('Failed to load services');
     }
     
-    const services = await response.json();
+    const result = await response.json();
+    const services = result.data || result;
     const servicesGrid = document.getElementById('services-grid');
     
     if (!servicesGrid) {

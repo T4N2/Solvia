@@ -17,6 +17,23 @@ module.exports = async function handler(req, res) {
 
   try {
     // API Routes
+    if (url.startsWith('/api/services')) {
+      if (method !== 'GET') {
+        res.status(405).json({ success: false, message: 'Method not allowed' });
+        return;
+      }
+      
+      const servicesPath = join(process.cwd(), 'data', 'services.json');
+      const servicesData = JSON.parse(await readFile(servicesPath, 'utf8'));
+      
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+      res.status(200).json({
+        success: true,
+        data: servicesData
+      });
+      return;
+    }
+    
     if (url.startsWith('/api/portfolio')) {
       if (method !== 'GET') {
         res.status(405).json({ success: false, message: 'Method not allowed' });

@@ -137,14 +137,14 @@ let currentFilter = 'all';
  */
 async function loadPortfolioItems() {
   try {
-    // Add cache busting parameter to force fresh data
-    const cacheBuster = Date.now();
-    const response = await fetch(`/data/portfolio.json?v=${cacheBuster}`);
+    // Use API endpoint instead of direct file access
+    const response = await fetch('/api/portfolio');
     if (!response.ok) {
       throw new Error('Failed to load portfolio');
     }
     
-    portfolioData = await response.json();
+    const result = await response.json();
+    portfolioData = result.data || result;
     
     // Render filter buttons
     renderFilterButtons();

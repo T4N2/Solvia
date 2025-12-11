@@ -65,14 +65,14 @@ const AUTO_PLAY_DELAY = 5000; // 5 seconds
  */
 async function loadTestimonials() {
   try {
-    // Add cache busting parameter to force fresh data
-    const cacheBuster = Date.now();
-    const response = await fetch(`/data/testimonials.json?v=${cacheBuster}`);
+    // Use API endpoint instead of direct file access
+    const response = await fetch('/api/testimonials');
     if (!response.ok) {
       throw new Error('Failed to load testimonials');
     }
     
-    testimonials = await response.json();
+    const result = await response.json();
+    testimonials = result.data || result;
     
     if (testimonials.length === 0) {
       console.warn('No testimonials found');
