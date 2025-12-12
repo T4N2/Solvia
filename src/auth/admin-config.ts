@@ -5,7 +5,7 @@ export const ADMIN_CONFIG = {
   // Default admin credentials (CHANGE THESE!)
   username: 'admin',
   // Password: 'solvia2024' (hashed)
-  passwordHash: '$2a$10$8K1p/a0dclxviR.LXY6LReIFwjJVr/HYlqDEL.7n8O.Tn8VJkqj1.',
+  passwordHash: '$2b$10$X2lZhKS6i3JtvlOOe3NJs.cdvtXsJygMJv27P1rTtQmZ7Q1abAwAq',
   
   // JWT configuration
   jwtSecret: 'solvia-nova-jwt-secret-key-2024-very-secure',

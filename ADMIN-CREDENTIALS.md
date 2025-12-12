@@ -130,8 +130,8 @@ jwtSecret: 'your-super-secure-random-string-here'
 ### **Environment Variables (Optional):**
 ```bash
 # Vercel Environment Variables
-ADMIN_USERNAME=your-admin-username
-ADMIN_PASSWORD_HASH=your-hashed-password
+ADMIN_USERNAME=solvia
+ADMIN_PASSWORD_HASH=nova123
 JWT_SECRET=your-jwt-secret-key
 ```
 

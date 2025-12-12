@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 // Admin configuration for Vercel
 const ADMIN_CONFIG = {
   username: 'admin',
-  passwordHash: '$2a$10$8K1p/a0dclxviR.LXY6LReIFwjJVr/HYlqDEL.7n8O.Tn8VJkqj1.',
+  passwordHash: '$2b$10$X2lZhKS6i3JtvlOOe3NJs.cdvtXsJygMJv27P1rTtQmZ7Q1abAwAq',
   jwtSecret: 'solvia-nova-jwt-secret-key-2024-very-secure',
   jwtExpiry: '24h',
   maxLoginAttempts: 5,
