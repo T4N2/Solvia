@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Admin CMS</title>
+</head>
+<body>
+    <h1>Debug Admin CMS</h1>
+    
+    <div id="debug-output"></div>
+    
+    <button onclick="testLoadServices()">Test Load Services</button>
+    <button onclick="testLoadPortfolio()">Test Load Portfolio</button>
+    <button onclick="testLoadTestimonials()">Test Load Testimonials</button>
+    
+    <script>
+        const debugOutput = document.getElementById('debug-output');
+        
+        function log(message) {
+            debugOutput.innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+        
+        async function testLoadServices() {
+            log('Testing /api/services...');
+            try {
+                const response = await fetch('/api/services');
+                log('Response status: ' + response.status);
+                const data = await response.json();
+                log('Response data: ' + JSON.stringify(data, null, 2));
+            } catch (error) {
+                log('Error: ' + error.message);
+            }
+        }
+        
+        async function testLoadPortfolio() {
+            log('Testing /api/portfolio...');
+            try {
+                const response = await fetch('/api/portfolio');
+                log('Response status: ' + response.status);
+                const data = await response.json();
+                log('Response data: ' + JSON.stringify(data, null, 2));
+            } catch (error) {
+                log('Error: ' + error.message);
+            }
+        }
+        
+        async function testLoadTestimonials() {
+            log('Testing /api/testimonials...');
+            try {
+                const response = await fetch('/api/testimonials');
+                log('Response status: ' + response.status);
+                const data = await response.json();
+                log('Response data: ' + JSON.stringify(data, null, 2));
+            } catch (error) {
+                log('Error: ' + error.message);
+            }
+        }
+        
+        // Auto test on load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Starting debug tests...');
+            setTimeout(() => {
+                testLoadServices();
+                setTimeout(() => {
+                    testLoadPortfolio();
+                    setTimeout(() => {
+                        testLoadTestimonials();
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
