@@ -43,6 +43,38 @@ const app = new Elysia()
       };
     }
   })
+  .get('/api/services', async ({ set }) => {
+    try {
+      const servicesFile = Bun.file('data/services.json');
+      
+      if (!await servicesFile.exists()) {
+        set.status = 404;
+        set.headers['Cache-Control'] = 'no-cache';
+        return {
+          success: false,
+          message: 'Services data not found',
+        };
+      }
+
+      const servicesData = await servicesFile.json();
+
+      set.headers['Cache-Control'] = 'public, max-age=3600, s-maxage=3600';
+      set.headers['ETag'] = `"services-${Date.now()}"`;
+      
+      return {
+        success: true,
+        data: servicesData,
+      };
+    } catch (error) {
+      console.error('Services API error:', error);
+      set.status = 500;
+      set.headers['Cache-Control'] = 'no-cache';
+      return {
+        success: false,
+        message: 'Failed to retrieve services data',
+      };
+    }
+  })
   .get('/api/testimonials', async ({ set }) => {
     try {
       const testimonialsFile = Bun.file('data/testimonials.json');
@@ -73,6 +105,124 @@ const app = new Elysia()
         success: false,
         message: 'Failed to retrieve testimonials data',
       };
+    }
+  })
+  // Admin API endpoints
+  .post('/api/admin/services', async ({ body, set }) => {
+    try {
+      const servicesFile = Bun.file('data/services.json');
+      const services = await servicesFile.json();
+      
+      const serviceData = body as any;
+      const existingIndex = services.findIndex((s: any) => s.id === serviceData.id);
+      
+      if (existingIndex >= 0) {
+        services[existingIndex] = serviceData;
+      } else {
+        services.push(serviceData);
+      }
+      
+      await Bun.write('data/services.json', JSON.stringify(services, null, 2));
+      
+      return { success: true, message: 'Service saved successfully' };
+    } catch (error) {
+      console.error('Admin services error:', error);
+      set.status = 500;
+      return { success: false, message: 'Failed to save service' };
+    }
+  })
+  .delete('/api/admin/services/:id', async ({ params, set }) => {
+    try {
+      const servicesFile = Bun.file('data/services.json');
+      const services = await servicesFile.json();
+      
+      const filteredServices = services.filter((s: any) => s.id !== params.id);
+      
+      await Bun.write('data/services.json', JSON.stringify(filteredServices, null, 2));
+      
+      return { success: true, message: 'Service deleted successfully' };
+    } catch (error) {
+      console.error('Admin services delete error:', error);
+      set.status = 500;
+      return { success: false, message: 'Failed to delete service' };
+    }
+  })
+  .post('/api/admin/portfolio', async ({ body, set }) => {
+    try {
+      const portfolioFile = Bun.file('data/portfolio.json');
+      const portfolio = await portfolioFile.json();
+      
+      const portfolioData = body as any;
+      const existingIndex = portfolio.findIndex((p: any) => p.id === portfolioData.id);
+      
+      if (existingIndex >= 0) {
+        portfolio[existingIndex] = portfolioData;
+      } else {
+        portfolio.push(portfolioData);
+      }
+      
+      await Bun.write('data/portfolio.json', JSON.stringify(portfolio, null, 2));
+      
+      return { success: true, message: 'Portfolio saved successfully' };
+    } catch (error) {
+      console.error('Admin portfolio error:', error);
+      set.status = 500;
+      return { success: false, message: 'Failed to save portfolio' };
+    }
+  })
+  .delete('/api/admin/portfolio/:id', async ({ params, set }) => {
+    try {
+      const portfolioFile = Bun.file('data/portfolio.json');
+      const portfolio = await portfolioFile.json();
+      
+      const filteredPortfolio = portfolio.filter((p: any) => p.id !== params.id);
+      
+      await Bun.write('data/portfolio.json', JSON.stringify(filteredPortfolio, null, 2));
+      
+      return { success: true, message: 'Portfolio deleted successfully' };
+    } catch (error) {
+      console.error('Admin portfolio delete error:', error);
+      set.status = 500;
+      return { success: false, message: 'Failed to delete portfolio' };
+    }
+  })
+  .post('/api/admin/testimonials', async ({ body, set }) => {
+    try {
+      const testimonialsFile = Bun.file('data/testimonials.json');
+      const testimonials = await testimonialsFile.json();
+      
+      const testimonialData = body as any;
+      const existingIndex = testimonials.findIndex((t: any) => t.id === testimonialData.id);
+      
+      if (existingIndex >= 0) {
+        testimonials[existingIndex] = testimonialData;
+      } else {
+        testimonials.push(testimonialData);
+      }
+      
+      await Bun.write('data/testimonials.json', JSON.stringify(testimonials, null, 2));
+      
+      return { success: true, message: 'Testimonial saved successfully' };
+    } catch (error) {
+      console.error('Admin testimonials error:', error);
+      set.status = 500;
+      return { success: false, message: 'Failed to save testimonial' };
+    }
+  })
+  .delete('/api/admin/testimonials/:id', async ({ params, set }) => {
+    try {
+      const testimonialsFile = Bun.file('data/testimonials.json');
+      const testimonials = await testimonialsFile.json();
+      
+      const filteredTestimonials = testimonials.filter((t: any) => t.id !== params.id);
+      
+      await Bun.write('data/testimonials.json', JSON.stringify(filteredTestimonials, null, 2));
+      
+      return { success: true, message: 'Testimonial deleted successfully' };
+    } catch (error) {
+      console.error('Admin testimonials delete error:', error);
+      set.status = 500;
+      return { success: false, message: 'Failed to delete testimonial' };
     }
   })
   .post('/api/contact', async ({ body, request }) => {
@@ -132,6 +282,24 @@ const app = new Elysia()
   // Static file serving with caching headers
   .get('/', () => {
     const file = Bun.file('public/index.html');
+    return new Response(file.stream(), {
+      headers: {
+        'Content-Type': 'text/html',
+        'Cache-Control': 'public, max-age=300', // 5 minutes for HTML
+      },
+    });
+  })
+  .get('/admin', () => {
+    const file = Bun.file('public/admin.html');
+    return new Response(file.stream(), {
+      headers: {
+        'Content-Type': 'text/html',
+        'Cache-Control': 'public, max-age=300', // 5 minutes for HTML
+      },
+    });
+  })
+  .get('/admin.html', () => {
+    const file = Bun.file('public/admin.html');
     return new Response(file.stream(), {
       headers: {
         'Content-Type': 'text/html',
