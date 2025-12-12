@@ -1,6 +1,86 @@
 // Vercel Serverless Function for Solvia Nova Portfolio
 const { readFile, writeFile } = require('fs/promises');
 const { join } = require('path');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+// Admin configuration for Vercel
+const ADMIN_CONFIG = {
+  username: 'admin',
+  passwordHash: '$2a$10$8K1p/a0dclxviR.LXY6LReIFwjJVr/HYlqDEL.7n8O.Tn8VJkqj1.',
+  jwtSecret: 'solvia-nova-jwt-secret-key-2024-very-secure',
+  jwtExpiry: '24h',
+  maxLoginAttempts: 5,
+  lockoutDuration: 15 * 60 * 1000,
+};
+
+// In-memory store for failed login attempts
+const loginAttempts = new Map();
+
+// Auth helper functions
+function verifyToken(token) {
+  try {
+    const decoded = jwt.verify(token, ADMIN_CONFIG.jwtSecret);
+    return { username: decoded.username, isAdmin: decoded.isAdmin };
+  } catch (error) {
+    return null;
+  }
+}
+
+function generateToken(username) {
+  const payload = { username, isAdmin: true, iat: Math.floor(Date.now() / 1000) };
+  const token = jwt.sign(payload, ADMIN_CONFIG.jwtSecret, { expiresIn: ADMIN_CONFIG.jwtExpiry });
+  const expires = Date.now() + (24 * 60 * 60 * 1000);
+  return { token, expires };
+}
+
+function extractToken(authHeader) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
+  return authHeader.substring(7);
+}
+
+function requireAuth(authHeader) {
+  const token = extractToken(authHeader);
+  if (!token) return { success: false, error: 'No token provided' };
+  
+  const user = verifyToken(token);
+  if (!user) return { success: false, error: 'Invalid or expired token' };
+  if (!user.isAdmin) return { success: false, error: 'Admin access required' };
+  
+  return { success: true, user };
+}
+
+async function verifyAdminCredentials(username, password) {
+  if (username !== ADMIN_CONFIG.username) return false;
+  return await bcrypt.compare(password, ADMIN_CONFIG.passwordHash);
+}
+
+function isLockedOut(ip) {
+  const attempts = loginAttempts.get(ip);
+  if (!attempts) return false;
+  
+  const now = Date.now();
+  if (attempts.count >= ADMIN_CONFIG.maxLoginAttempts) {
+    if (now - attempts.lastAttempt < ADMIN_CONFIG.lockoutDuration) {
+      return true;
+    } else {
+      loginAttempts.delete(ip);
+      return false;
+    }
+  }
+  return false;
+}
+
+function recordFailedAttempt(ip) {
+  const attempts = loginAttempts.get(ip) || { count: 0, lastAttempt: 0 };
+  attempts.count++;
+  attempts.lastAttempt = Date.now();
+  loginAttempts.set(ip, attempts);
+}
+
+function clearFailedAttempts(ip) {
+  loginAttempts.delete(ip);
+}
 
 module.exports = async function handler(req, res) {
   const { method, url } = req;
@@ -122,6 +202,58 @@ module.exports = async function handler(req, res) {
       return;
     }
     
+    // Admin login endpoint
+    if (url === '/api/admin/login') {
+      if (method !== 'POST') {
+        res.status(405).json({ success: false, message: 'Method not allowed' });
+        return;
+      }
+      
+      let body = '';
+      req.on('data', chunk => { body += chunk.toString(); });
+      req.on('end', async () => {
+        try {
+          const { username, password } = JSON.parse(body);
+          const ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown';
+          
+          if (isLockedOut(ip)) {
+            res.status(429).json({
+              success: false,
+              message: 'Too many failed login attempts. Please try again later.'
+            });
+            return;
+          }
+          
+          const isValid = await verifyAdminCredentials(username, password);
+          
+          if (!isValid) {
+            recordFailedAttempt(ip);
+            res.status(401).json({
+              success: false,
+              message: 'Invalid username or password'
+            });
+            return;
+          }
+          
+          clearFailedAttempts(ip);
+          const { token, expires } = generateToken(username);
+          
+          res.status(200).json({
+            success: true,
+            message: 'Login successful',
+            token,
+            expires
+          });
+        } catch (error) {
+          res.status(400).json({
+            success: false,
+            message: 'Invalid JSON data'
+          });
+        }
+      });
+      return;
+    }
+    
     // Admin API Routes
     if (url.startsWith('/api/admin/')) {
       return handleAdminAPI(req, res, url, method);
@@ -141,6 +273,17 @@ module.exports = async function handler(req, res) {
     // Admin page
     if (url === '/admin' || url === '/admin.html') {
       const htmlPath = join(process.cwd(), 'public', 'admin.html');
+      const htmlContent = await readFile(htmlPath, 'utf8');
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Cache-Control', 'public, max-age=300');
+      res.status(200).send(htmlContent);
+      return;
+    }
+    
+    // Login page
+    if (url === '/login' || url === '/login.html') {
+      const htmlPath = join(process.cwd(), 'public', 'login.html');
       const htmlContent = await readFile(htmlPath, 'utf8');
       
       res.setHeader('Content-Type', 'text/html');
@@ -190,6 +333,13 @@ module.exports = async function handler(req, res) {
  */
 async function handleAdminAPI(req, res, url, method) {
   try {
+    // Check authentication for all admin API calls
+    const authResult = requireAuth(req.headers.authorization);
+    if (!authResult.success) {
+      res.status(401).json({ success: false, message: authResult.error });
+      return;
+    }
+    
     // Parse request body for POST/PUT/DELETE requests
     let body = '';
     if (method !== 'GET') {

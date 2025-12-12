@@ -1,5 +1,12 @@
 import { Elysia } from 'elysia';
 import { handleContactSubmission } from './api/contact';
+import { 
+  verifyAdminCredentials, 
+  isLockedOut, 
+  recordFailedAttempt, 
+  clearFailedAttempts 
+} from './auth/admin-config';
+import { generateToken, requireAuth } from './auth/middleware';
 
 const app = new Elysia()
   // API routes first
@@ -107,8 +114,66 @@ const app = new Elysia()
       };
     }
   })
+  // Admin login endpoint
+  .post('/api/admin/login', async ({ body, request, set }) => {
+    try {
+      const { username, password } = body as { username: string; password: string };
+      
+      // Get client IP
+      const ip = request.headers.get('x-forwarded-for') || 
+                 request.headers.get('x-real-ip') || 
+                 'unknown';
+      
+      // Check if IP is locked out
+      if (isLockedOut(ip)) {
+        set.status = 429;
+        return {
+          success: false,
+          message: 'Too many failed login attempts. Please try again later.'
+        };
+      }
+      
+      // Verify credentials
+      const isValid = await verifyAdminCredentials(username, password);
+      
+      if (!isValid) {
+        recordFailedAttempt(ip);
+        set.status = 401;
+        return {
+          success: false,
+          message: 'Invalid username or password'
+        };
+      }
+      
+      // Clear failed attempts on successful login
+      clearFailedAttempts(ip);
+      
+      // Generate JWT token
+      const { token, expires } = generateToken(username);
+      
+      return {
+        success: true,
+        message: 'Login successful',
+        token,
+        expires
+      };
+    } catch (error) {
+      console.error('Login error:', error);
+      set.status = 500;
+      return {
+        success: false,
+        message: 'Internal server error'
+      };
+    }
+  })
   // Admin API endpoints
-  .post('/api/admin/services', async ({ body, set }) => {
+  .post('/api/admin/services', async ({ body, request, set }) => {
+    // Check authentication
+    const authResult = requireAuth(request.headers.get('authorization'));
+    if (!authResult.success) {
+      set.status = 401;
+      return { success: false, message: authResult.error };
+    }
     try {
       const servicesFile = Bun.file('data/services.json');
       const services = await servicesFile.json();
@@ -131,7 +196,13 @@ const app = new Elysia()
       return { success: false, message: 'Failed to save service' };
     }
   })
-  .delete('/api/admin/services/:id', async ({ params, set }) => {
+  .delete('/api/admin/services/:id', async ({ params, request, set }) => {
+    // Check authentication
+    const authResult = requireAuth(request.headers.get('authorization'));
+    if (!authResult.success) {
+      set.status = 401;
+      return { success: false, message: authResult.error };
+    }
     try {
       const servicesFile = Bun.file('data/services.json');
       const services = await servicesFile.json();
@@ -147,7 +218,13 @@ const app = new Elysia()
       return { success: false, message: 'Failed to delete service' };
     }
   })
-  .post('/api/admin/portfolio', async ({ body, set }) => {
+  .post('/api/admin/portfolio', async ({ body, request, set }) => {
+    // Check authentication
+    const authResult = requireAuth(request.headers.get('authorization'));
+    if (!authResult.success) {
+      set.status = 401;
+      return { success: false, message: authResult.error };
+    }
     try {
       const portfolioFile = Bun.file('data/portfolio.json');
       const portfolio = await portfolioFile.json();
@@ -170,7 +247,13 @@ const app = new Elysia()
       return { success: false, message: 'Failed to save portfolio' };
     }
   })
-  .delete('/api/admin/portfolio/:id', async ({ params, set }) => {
+  .delete('/api/admin/portfolio/:id', async ({ params, request, set }) => {
+    // Check authentication
+    const authResult = requireAuth(request.headers.get('authorization'));
+    if (!authResult.success) {
+      set.status = 401;
+      return { success: false, message: authResult.error };
+    }
     try {
       const portfolioFile = Bun.file('data/portfolio.json');
       const portfolio = await portfolioFile.json();
@@ -186,7 +269,13 @@ const app = new Elysia()
       return { success: false, message: 'Failed to delete portfolio' };
     }
   })
-  .post('/api/admin/testimonials', async ({ body, set }) => {
+  .post('/api/admin/testimonials', async ({ body, request, set }) => {
+    // Check authentication
+    const authResult = requireAuth(request.headers.get('authorization'));
+    if (!authResult.success) {
+      set.status = 401;
+      return { success: false, message: authResult.error };
+    }
     try {
       const testimonialsFile = Bun.file('data/testimonials.json');
       const testimonials = await testimonialsFile.json();
@@ -209,7 +298,13 @@ const app = new Elysia()
       return { success: false, message: 'Failed to save testimonial' };
     }
   })
-  .delete('/api/admin/testimonials/:id', async ({ params, set }) => {
+  .delete('/api/admin/testimonials/:id', async ({ params, request, set }) => {
+    // Check authentication
+    const authResult = requireAuth(request.headers.get('authorization'));
+    if (!authResult.success) {
+      set.status = 401;
+      return { success: false, message: authResult.error };
+    }
     try {
       const testimonialsFile = Bun.file('data/testimonials.json');
       const testimonials = await testimonialsFile.json();
@@ -300,6 +395,24 @@ const app = new Elysia()
   })
   .get('/admin.html', () => {
     const file = Bun.file('public/admin.html');
+    return new Response(file.stream(), {
+      headers: {
+        'Content-Type': 'text/html',
+        'Cache-Control': 'public, max-age=300', // 5 minutes for HTML
+      },
+    });
+  })
+  .get('/login', () => {
+    const file = Bun.file('public/login.html');
+    return new Response(file.stream(), {
+      headers: {
+        'Content-Type': 'text/html',
+        'Cache-Control': 'public, max-age=300', // 5 minutes for HTML
+      },
+    });
+  })
+  .get('/login.html', () => {
+    const file = Bun.file('public/login.html');
     return new Response(file.stream(), {
       headers: {
         'Content-Type': 'text/html',
