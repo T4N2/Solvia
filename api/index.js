@@ -1,5 +1,5 @@
 // Vercel Serverless Function for Solvia Nova Portfolio
-const { readFile } = require('fs/promises');
+const { readFile, writeFile } = require('fs/promises');
 const { join } = require('path');
 
 module.exports = async function handler(req, res) {
@@ -122,9 +122,25 @@ module.exports = async function handler(req, res) {
       return;
     }
     
+    // Admin API Routes
+    if (url.startsWith('/api/admin/')) {
+      return handleAdminAPI(req, res, url, method);
+    }
+    
     // Static file serving
     if (url === '/' || url === '/index.html') {
       const htmlPath = join(process.cwd(), 'public', 'index.html');
+      const htmlContent = await readFile(htmlPath, 'utf8');
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Cache-Control', 'public, max-age=300');
+      res.status(200).send(htmlContent);
+      return;
+    }
+    
+    // Admin page
+    if (url === '/admin' || url === '/admin.html') {
+      const htmlPath = join(process.cwd(), 'public', 'admin.html');
       const htmlContent = await readFile(htmlPath, 'utf8');
       
       res.setHeader('Content-Type', 'text/html');
@@ -167,4 +183,174 @@ module.exports = async function handler(req, res) {
       message: 'Internal server error'
     });
   }
+}
+
+/**
+ * Handle Admin API requests
+ */
+async function handleAdminAPI(req, res, url, method) {
+  try {
+    // Parse request body for POST/PUT/DELETE requests
+    let body = '';
+    if (method !== 'GET') {
+      await new Promise((resolve) => {
+        req.on('data', chunk => {
+          body += chunk.toString();
+        });
+        req.on('end', resolve);
+      });
+    }
+    
+    const data = body ? JSON.parse(body) : null;
+    
+    // Services admin endpoints
+    if (url.startsWith('/api/admin/services')) {
+      if (method === 'POST') {
+        await saveService(data);
+        res.status(200).json({ success: true, message: 'Service saved successfully' });
+        return;
+      }
+      
+      if (method === 'DELETE') {
+        const id = url.split('/').pop();
+        await deleteService(id);
+        res.status(200).json({ success: true, message: 'Service deleted successfully' });
+        return;
+      }
+    }
+    
+    // Portfolio admin endpoints
+    if (url.startsWith('/api/admin/portfolio')) {
+      if (method === 'POST') {
+        await savePortfolio(data);
+        res.status(200).json({ success: true, message: 'Portfolio saved successfully' });
+        return;
+      }
+      
+      if (method === 'DELETE') {
+        const id = url.split('/').pop();
+        await deletePortfolio(id);
+        res.status(200).json({ success: true, message: 'Portfolio deleted successfully' });
+        return;
+      }
+    }
+    
+    // Testimonials admin endpoints
+    if (url.startsWith('/api/admin/testimonials')) {
+      if (method === 'POST') {
+        await saveTestimonial(data);
+        res.status(200).json({ success: true, message: 'Testimonial saved successfully' });
+        return;
+      }
+      
+      if (method === 'DELETE') {
+        const id = url.split('/').pop();
+        await deleteTestimonial(id);
+        res.status(200).json({ success: true, message: 'Testimonial deleted successfully' });
+        return;
+      }
+    }
+    
+    res.status(404).json({ success: false, message: 'Admin endpoint not found' });
+    
+  } catch (error) {
+    console.error('Admin API error:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
+
+/**
+ * Save service data
+ */
+async function saveService(serviceData) {
+  const servicesPath = join(process.cwd(), 'data', 'services.json');
+  const services = JSON.parse(await readFile(servicesPath, 'utf8'));
+  
+  const existingIndex = services.findIndex(s => s.id === serviceData.id);
+  
+  if (existingIndex >= 0) {
+    // Update existing service
+    services[existingIndex] = serviceData;
+  } else {
+    // Add new service
+    services.push(serviceData);
+  }
+  
+  await writeFile(servicesPath, JSON.stringify(services, null, 2), 'utf8');
+}
+
+/**
+ * Delete service data
+ */
+async function deleteService(serviceId) {
+  const servicesPath = join(process.cwd(), 'data', 'services.json');
+  const services = JSON.parse(await readFile(servicesPath, 'utf8'));
+  
+  const filteredServices = services.filter(s => s.id !== serviceId);
+  
+  await writeFile(servicesPath, JSON.stringify(filteredServices, null, 2), 'utf8');
+}
+
+/**
+ * Save portfolio data
+ */
+async function savePortfolio(portfolioData) {
+  const portfolioPath = join(process.cwd(), 'data', 'portfolio.json');
+  const portfolio = JSON.parse(await readFile(portfolioPath, 'utf8'));
+  
+  const existingIndex = portfolio.findIndex(p => p.id === portfolioData.id);
+  
+  if (existingIndex >= 0) {
+    // Update existing portfolio
+    portfolio[existingIndex] = portfolioData;
+  } else {
+    // Add new portfolio
+    portfolio.push(portfolioData);
+  }
+  
+  await writeFile(portfolioPath, JSON.stringify(portfolio, null, 2), 'utf8');
+}
+
+/**
+ * Delete portfolio data
+ */
+async function deletePortfolio(portfolioId) {
+  const portfolioPath = join(process.cwd(), 'data', 'portfolio.json');
+  const portfolio = JSON.parse(await readFile(portfolioPath, 'utf8'));
+  
+  const filteredPortfolio = portfolio.filter(p => p.id !== portfolioId);
+  
+  await writeFile(portfolioPath, JSON.stringify(filteredPortfolio, null, 2), 'utf8');
+}
+
+/**
+ * Save testimonial data
+ */
+async function saveTestimonial(testimonialData) {
+  const testimonialsPath = join(process.cwd(), 'data', 'testimonials.json');
+  const testimonials = JSON.parse(await readFile(testimonialsPath, 'utf8'));
+  
+  const existingIndex = testimonials.findIndex(t => t.id === testimonialData.id);
+  
+  if (existingIndex >= 0) {
+    // Update existing testimonial
+    testimonials[existingIndex] = testimonialData;
+  } else {
+    // Add new testimonial
+    testimonials.push(testimonialData);
+  }
+  
+  await writeFile(testimonialsPath, JSON.stringify(testimonials, null, 2), 'utf8');
+}
+
+/**
+ * Delete testimonial data
+ */
+async function deleteTestimonial(testimonialId) {
+  const testimonialsPath = join(process.cwd(), 'data', 'testimonials.json');
+  const testimonials = JSON.parse(await readFile(testimonialsPath, 'utf8'));
+  
+  const filteredTestimonials = testimonials.filter(t => t.id !== testimonialId);
+  
+  await writeFile(testimonialsPath, JSON.stringify(filteredTestimonials, null, 2), 'utf8');
 }
