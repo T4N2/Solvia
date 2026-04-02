@@ -16,22 +16,6 @@
     "icon": "web"
   },
   {
-    "id": "mobile-development",
-    "name": "Pengembangan Aplikasi Mobile",
-    "description": "Aplikasi mobile native dan cross-platform untuk iOS dan Android dengan pengalaman pengguna yang seamless",
-    "features": [
-      "Pengembangan iOS dan Android",
-      "Solusi cross-platform (React Native / Flutter)",
-      "Optimasi performa native",
-      "Integrasi push notifications",
-      "Fungsionalitas offline",
-      "Deployment ke App Store & Play Store"
-    ],
-    "price": "Mulai dari Rp 3.000.000",
-    "popular": false,
-    "icon": "mobile"
-  },
-  {
     "id": "full-stack-solution",
     "name": "Solusi Full Stack",
     "description": "Solusi end-to-end lengkap meliputi frontend, backend, database, dan infrastruktur deployment",
