@@ -3,17 +3,35 @@ import { handleContactSubmission } from "./api/contact";
 import { uploadRoutes } from "./api/upload";
 import { verifyAdminCredentials, isLockedOut, recordFailedAttempt, clearFailedAttempts } from "./auth/admin-config";
 import { generateToken, requireAuth } from "./auth/middleware";
+import { readFile, access, writeFile } from "fs/promises";
+import { createReadStream } from "fs";
+import { staticPlugin } from "@elysiajs/static";
+import path from "path";
 
 const app = new Elysia()
+  .use(
+    staticPlugin({
+      assets: path.join(process.cwd(), "public"),
+      prefix: "/",
+    })
+  )
+  .use(
+    staticPlugin({
+      assets: path.join(process.cwd(), "data"),
+      prefix: "/data",
+    })
+  )
   // Upload routes
   .use(uploadRoutes)
 
   // API routes first
   .get("/api/portfolio", async ({ query, set }) => {
     try {
-      const portfolioFile = Bun.file("data/portfolio.json");
+      const portfolioPath = path.join(process.cwd(), "data/portfolio.json");
 
-      if (!(await portfolioFile.exists())) {
+      try {
+        await access(portfolioPath);
+      } catch {
         set.status = 404;
         set.headers["Cache-Control"] = "no-cache";
         return {
@@ -22,7 +40,7 @@ const app = new Elysia()
         };
       }
 
-      const portfolioData = await portfolioFile.json();
+      const portfolioData = JSON.parse(await readFile(portfolioPath, "utf-8"));
 
       // Apply filtering if category is provided
       let filteredData = portfolioData;
@@ -49,9 +67,11 @@ const app = new Elysia()
   })
   .get("/api/services", async ({ set }) => {
     try {
-      const servicesFile = Bun.file("data/services.json");
+      const servicesPath = path.join(process.cwd(), "data/services.json");
 
-      if (!(await servicesFile.exists())) {
+      try {
+        await access(servicesPath);
+      } catch {
         set.status = 404;
         set.headers["Cache-Control"] = "no-cache";
         return {
@@ -60,7 +80,7 @@ const app = new Elysia()
         };
       }
 
-      const servicesData = await servicesFile.json();
+      const servicesData = JSON.parse(await readFile(servicesPath, "utf-8"));
 
       set.headers["Cache-Control"] = "no-store";
       set.headers["ETag"] = `"services-${Date.now()}"`;
@@ -81,9 +101,11 @@ const app = new Elysia()
   })
   .get("/api/testimonials", async ({ set }) => {
     try {
-      const testimonialsFile = Bun.file("data/testimonials.json");
+      const testimonialsPath = path.join(process.cwd(), "data/testimonials.json");
 
-      if (!(await testimonialsFile.exists())) {
+      try {
+        await access(testimonialsPath);
+      } catch {
         set.status = 404;
         set.headers["Cache-Control"] = "no-cache";
         return {
@@ -92,7 +114,7 @@ const app = new Elysia()
         };
       }
 
-      const testimonialsData = await testimonialsFile.json();
+      const testimonialsData = JSON.parse(await readFile(testimonialsPath, "utf-8"));
 
       set.headers["Cache-Control"] = "no-store";
       set.headers["ETag"] = `"testimonials-${Date.now()}"`;
@@ -186,8 +208,8 @@ const app = new Elysia()
       return { success: false, message: authResult.error };
     }
     try {
-      const servicesFile = Bun.file("data/services.json");
-      const services = await servicesFile.json();
+      const servicesPath = path.join(process.cwd(), "data/services.json");
+      const services = JSON.parse(await readFile(servicesPath, "utf-8"));
 
       const serviceData = body as any;
       const existingIndex = services.findIndex((s: any) => s.id === serviceData.id);
@@ -198,7 +220,7 @@ const app = new Elysia()
         services.push(serviceData);
       }
 
-      await Bun.write("data/services.json", JSON.stringify(services, null, 2));
+      await writeFile(servicesPath, JSON.stringify(services, null, 2));
 
       return { success: true, message: "Service saved successfully" };
     } catch (error) {
@@ -215,12 +237,12 @@ const app = new Elysia()
       return { success: false, message: authResult.error };
     }
     try {
-      const servicesFile = Bun.file("data/services.json");
-      const services = await servicesFile.json();
+      const servicesPath = path.join(process.cwd(), "data/services.json");
+      const services = JSON.parse(await readFile(servicesPath, "utf-8"));
 
       const filteredServices = services.filter((s: any) => s.id !== params.id);
 
-      await Bun.write("data/services.json", JSON.stringify(filteredServices, null, 2));
+      await writeFile(servicesPath, JSON.stringify(filteredServices, null, 2));
 
       return { success: true, message: "Service deleted successfully" };
     } catch (error) {
@@ -237,8 +259,8 @@ const app = new Elysia()
       return { success: false, message: authResult.error };
     }
     try {
-      const portfolioFile = Bun.file("data/portfolio.json");
-      const portfolio = await portfolioFile.json();
+      const portfolioPath = path.join(process.cwd(), "data/portfolio.json");
+      const portfolio = JSON.parse(await readFile(portfolioPath, "utf-8"));
 
       const portfolioData = body as any;
       const existingIndex = portfolio.findIndex((p: any) => p.id === portfolioData.id);
@@ -249,7 +271,7 @@ const app = new Elysia()
         portfolio.push(portfolioData);
       }
 
-      await Bun.write("data/portfolio.json", JSON.stringify(portfolio, null, 2));
+      await writeFile(portfolioPath, JSON.stringify(portfolio, null, 2));
 
       return { success: true, message: "Portfolio saved successfully" };
     } catch (error) {
@@ -266,12 +288,12 @@ const app = new Elysia()
       return { success: false, message: authResult.error };
     }
     try {
-      const portfolioFile = Bun.file("data/portfolio.json");
-      const portfolio = await portfolioFile.json();
+      const portfolioPath = path.join(process.cwd(), "data/portfolio.json");
+      const portfolio = JSON.parse(await readFile(portfolioPath, "utf-8"));
 
       const filteredPortfolio = portfolio.filter((p: any) => p.id !== params.id);
 
-      await Bun.write("data/portfolio.json", JSON.stringify(filteredPortfolio, null, 2));
+      await writeFile(portfolioPath, JSON.stringify(filteredPortfolio, null, 2));
 
       return { success: true, message: "Portfolio deleted successfully" };
     } catch (error) {
@@ -288,8 +310,8 @@ const app = new Elysia()
       return { success: false, message: authResult.error };
     }
     try {
-      const testimonialsFile = Bun.file("data/testimonials.json");
-      const testimonials = await testimonialsFile.json();
+      const testimonialsPath = path.join(process.cwd(), "data/testimonials.json");
+      const testimonials = JSON.parse(await readFile(testimonialsPath, "utf-8"));
 
       const testimonialData = body as any;
       const existingIndex = testimonials.findIndex((t: any) => t.id === testimonialData.id);
@@ -300,7 +322,7 @@ const app = new Elysia()
         testimonials.push(testimonialData);
       }
 
-      await Bun.write("data/testimonials.json", JSON.stringify(testimonials, null, 2));
+      await writeFile(testimonialsPath, JSON.stringify(testimonials, null, 2));
 
       return { success: true, message: "Testimonial saved successfully" };
     } catch (error) {
@@ -317,12 +339,12 @@ const app = new Elysia()
       return { success: false, message: authResult.error };
     }
     try {
-      const testimonialsFile = Bun.file("data/testimonials.json");
-      const testimonials = await testimonialsFile.json();
+      const testimonialsPath = path.join(process.cwd(), "data/testimonials.json");
+      const testimonials = JSON.parse(await readFile(testimonialsPath, "utf-8"));
 
       const filteredTestimonials = testimonials.filter((t: any) => t.id !== params.id);
 
-      await Bun.write("data/testimonials.json", JSON.stringify(filteredTestimonials, null, 2));
+      await writeFile(testimonialsPath, JSON.stringify(filteredTestimonials, null, 2));
 
       return { success: true, message: "Testimonial deleted successfully" };
     } catch (error) {
@@ -352,7 +374,7 @@ const app = new Elysia()
             {
               status: 429,
               headers: { "Content-Type": "application/json" },
-            },
+            }
           );
         }
 
@@ -365,7 +387,7 @@ const app = new Elysia()
             {
               status: 400,
               headers: { "Content-Type": "application/json" },
-            },
+            }
           );
         }
       }
@@ -379,133 +401,54 @@ const app = new Elysia()
         {
           status: 500,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
   })
   // Static file serving with caching headers
-  .get("/", () => {
-    const file = Bun.file("public/index.html");
-    return new Response(file.stream(), {
+  .get("/", async () => {
+    return new Response(await readFile(path.join(process.cwd(), "public/index.html")), {
       headers: {
         "Content-Type": "text/html",
         "Cache-Control": "public, max-age=300", // 5 minutes for HTML
       },
     });
   })
-  .get("/admin", () => {
-    const file = Bun.file("public/admin.html");
-    return new Response(file.stream(), {
+  .get("/admin", async () => {
+    return new Response(await readFile(path.join(process.cwd(), "public/admin.html")), {
       headers: {
         "Content-Type": "text/html",
         "Cache-Control": "public, max-age=300", // 5 minutes for HTML
       },
     });
   })
-  .get("/admin.html", () => {
-    const file = Bun.file("public/admin.html");
-    return new Response(file.stream(), {
+  .get("/admin.html", async () => {
+    return new Response(await readFile(path.join(process.cwd(), "public/admin.html")), {
       headers: {
         "Content-Type": "text/html",
         "Cache-Control": "public, max-age=300", // 5 minutes for HTML
       },
     });
   })
-  .get("/login", () => {
-    const file = Bun.file("public/login.html");
-    return new Response(file.stream(), {
+  .get("/login", async () => {
+    return new Response(await readFile(path.join(process.cwd(), "public/login.html")), {
       headers: {
         "Content-Type": "text/html",
         "Cache-Control": "public, max-age=300", // 5 minutes for HTML
       },
     });
   })
-  .get("/login.html", () => {
-    const file = Bun.file("public/login.html");
-    return new Response(file.stream(), {
+  .get("/login.html", async () => {
+    return new Response(await readFile(path.join(process.cwd(), "public/login.html")), {
       headers: {
         "Content-Type": "text/html",
         "Cache-Control": "public, max-age=300", // 5 minutes for HTML
       },
     });
   })
-  .get("/css/*", ({ params }) => {
-    const file = Bun.file(`public/css/${params["*"]}`);
-    return new Response(file.stream(), {
-      headers: {
-        "Content-Type": "text/css",
-        "Cache-Control": "public, max-age=31536000, immutable", // 1 year for CSS
-        ETag: `"css-${params["*"]}"`,
-        Vary: "Accept-Encoding",
-      },
-    });
-  })
-  .get("/dist/css/*", ({ params }) => {
-    const file = Bun.file(`public/dist/css/${params["*"]}`);
-    return new Response(file.stream(), {
-      headers: {
-        "Content-Type": "text/css",
-        "Cache-Control": "public, max-age=31536000, immutable", // 1 year for minified CSS
-        ETag: `"dist-css-${params["*"]}"`,
-        Vary: "Accept-Encoding",
-      },
-    });
-  })
-  .get("/js/*", ({ params }) => {
-    const file = Bun.file(`public/js/${params["*"]}`);
-    return new Response(file.stream(), {
-      headers: {
-        "Content-Type": "application/javascript",
-        "Cache-Control": "public, max-age=31536000, immutable", // 1 year for JS
-        ETag: `"js-${params["*"]}"`,
-        Vary: "Accept-Encoding",
-      },
-    });
-  })
-  .get("/dist/js/*", ({ params }) => {
-    const file = Bun.file(`public/dist/js/${params["*"]}`);
-    return new Response(file.stream(), {
-      headers: {
-        "Content-Type": "application/javascript",
-        "Cache-Control": "public, max-age=31536000, immutable", // 1 year for minified JS
-        ETag: `"dist-js-${params["*"]}"`,
-        Vary: "Accept-Encoding",
-      },
-    });
-  })
-  .get("/images/*", ({ params }) => {
-    const file = Bun.file(`public/images/${params["*"]}`);
-    const extension = params["*"].split(".").pop()?.toLowerCase();
-    let contentType = "image/jpeg"; // default
+  .listen(process.env.PORT || 3000);
 
-    if (extension === "png") contentType = "image/png";
-    else if (extension === "gif") contentType = "image/gif";
-    else if (extension === "webp") contentType = "image/webp";
-    else if (extension === "svg") contentType = "image/svg+xml";
-    else if (extension === "avif") contentType = "image/avif";
-
-    return new Response(file.stream(), {
-      headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "public, max-age=31536000, immutable", // 1 year for images
-        ETag: `"img-${params["*"]}"`,
-        Vary: "Accept-Encoding",
-      },
-    });
-  })
-  .get("/data/*", ({ params }) => {
-    const file = Bun.file(`data/${params["*"]}`);
-    return new Response(file.stream(), {
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store",
-        ETag: `"data-${params["*"]}"`,
-      },
-    });
-  })
-  .listen(3000);
-
-console.log(`🚀 Solvia Nova Portfolio is running at http://${app.server?.hostname}:${app.server?.port}`);
+console.log(`🚀 Solvia Nova Portfolio is running at http://localhost:${process.env.PORT || 3000}`);
 
 // Export for Vercel
 export default app;

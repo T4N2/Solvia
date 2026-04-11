@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 
 // Build script to minify CSS and JavaScript files for production
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';

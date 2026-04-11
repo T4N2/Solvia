@@ -1,9 +1,9 @@
 import { Elysia } from "elysia";
 import { requireAuth } from "../auth/middleware";
 import path from "path";
-import { mkdir, readdir, stat as fsStat, unlink } from "fs/promises";
+import { mkdir, readdir, stat as fsStat, unlink, writeFile, access } from "fs/promises";
 
-const uploadDir = "public/images/uploads";
+const uploadDir = path.join(process.cwd(), "public/images/uploads");
 
 // Ensure upload directory exists
 try {
@@ -56,7 +56,7 @@ export const uploadRoutes = new Elysia()
 
       // Save file
       const buffer = Buffer.from(await file.arrayBuffer());
-      await Bun.write(filepath, buffer);
+      await writeFile(filepath, buffer);
 
       // Return public URL
       const publicUrl = `/images/uploads/${filename}`;
@@ -92,9 +92,10 @@ export const uploadRoutes = new Elysia()
       }
 
       const filepath = `${uploadDir}/${filename}`;
-      const file = Bun.file(filepath);
 
-      if (!(await file.exists())) {
+      try {
+        await access(filepath);
+      } catch {
         set.status = 404;
         return { success: false, message: "File not found" };
       }

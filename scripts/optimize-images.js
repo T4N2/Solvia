@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 
 // Image optimization script to convert images to WebP format with fallbacks
 import { readdir, stat, readFile, writeFile, mkdir } from 'fs/promises';
